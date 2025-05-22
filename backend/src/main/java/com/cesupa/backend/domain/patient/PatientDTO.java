@@ -3,7 +3,6 @@ package com.cesupa.backend.domain.patient;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +11,6 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class PatientDTO {
@@ -23,7 +21,7 @@ public class PatientDTO {
     private String fullName;
 
     @NotNull(message = "Campo obrigatório")
-    @Past(message = "Data de nascimento deve ser no passado")
+    @Past(message = "Data de nascimento deve ser válida")
     private LocalDate birthDate;
 
     @NotBlank(message = "Campo obrigatório")
@@ -53,4 +51,18 @@ public class PatientDTO {
 
     private String knownAllergies;
     private Boolean active;
+
+    public PatientDTO(Patient entity) {
+        id = entity.getId();
+        fullName = entity.getFullName();
+        birthDate = entity.getBirthDate();
+        cpf = entity.getCpf();
+        gender = entity.getGender();
+        phone = entity.getPhone();
+        address = entity.getAddress();
+        email = entity.getEmail();
+        bloodType = entity.getBloodType();
+        knownAllergies = entity.getKnownAllergies();
+        active = entity.getActive();
+    }
 }

@@ -20,12 +20,15 @@ public class Patient {
 
     private String fullName;
     private LocalDate birthDate;
+
+    @Column(unique = true)
     private String cpf;
+
     private PatientGender gender;
     private String phone;
     private String address;
     private String email;
-    private String bloodType;
+    private PatientBloodType bloodType;
     private String knownAllergies;
     private Boolean active;
 }
