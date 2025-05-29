@@ -1,8 +1,5 @@
 package com.cesupa.backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cesupa.backend.domain.doctor.Doctor;
 import com.cesupa.backend.domain.medicalAppointment.AppointmentStatus;
 import com.cesupa.backend.domain.medicalAppointment.MedicalAppointment;
@@ -13,9 +10,10 @@ import com.cesupa.backend.repository.MedicalAppointmentRepository;
 import com.cesupa.backend.repository.PatientRepository;
 import com.cesupa.backend.service.exceptions.ConflictException;
 import com.cesupa.backend.service.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
