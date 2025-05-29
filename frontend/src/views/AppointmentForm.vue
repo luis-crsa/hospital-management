@@ -17,7 +17,6 @@
     </div>
 
     <form v-else @submit.prevent="handleSubmit">
-      <!-- Seleção de Paciente -->
       <div class="form-section">
         <h2>Paciente</h2>
         
@@ -54,7 +53,6 @@
         </div>
       </div>
 
-      <!-- Seleção de Médico e Horário -->
       <div class="form-section">
         <h2>Médico e Horário</h2>
 
@@ -121,7 +119,6 @@
       </div>
     </form>
 
-    <!-- Modal de Confirmação -->
     <div v-if="showConfirmationModal" class="modal">
       <div class="modal-content">
         <h2>Confirmar Agendamento</h2>

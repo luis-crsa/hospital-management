@@ -9,51 +9,6 @@
       {{ success }}
     </div>
 
-    <div class="filters">
-      <div class="search-container">
-        <input 
-          type="text" 
-          v-model="searchTerm"
-          placeholder="Buscar por paciente ou médico..."
-          @input="handleSearch"
-        >
-      </div>
-
-      <div class="date-filter">
-        <label for="startDate">Data Inicial:</label>
-        <input 
-          type="date" 
-          id="startDate"
-          v-model="filters.startDate"
-          @change="loadAppointments"
-        >
-      </div>
-
-      <div class="date-filter">
-        <label for="endDate">Data Final:</label>
-        <input 
-          type="date" 
-          id="endDate"
-          v-model="filters.endDate"
-          @change="loadAppointments"
-        >
-      </div>
-
-      <div class="status-filter">
-        <label for="status">Status:</label>
-        <select 
-          id="status" 
-          v-model="filters.status"
-          @change="loadAppointments"
-        >
-          <option value="">Todos</option>
-          <option value="SCHEDULED">Agendada</option>
-          <option value="COMPLETED">Realizada</option>
-          <option value="CANCELLED">Cancelada</option>
-        </select>
-      </div>
-    </div>
-
     <div v-if="loading" class="loading">
       <div class="spinner"></div>
       <p>Carregando...</p>
@@ -65,7 +20,10 @@
     </div>
 
     <div v-else>
-      <table class="appointments-table">
+      <div v-if="!appointments || appointments.length === 0" class="no-results">
+        Nenhuma consulta encontrada.
+      </div>
+      <table v-else class="appointments-table">
         <thead>
           <tr>
             <th>Data</th>
@@ -73,44 +31,18 @@
             <th>Paciente</th>
             <th>Médico</th>
             <th>Status</th>
-            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="appointment in appointments" :key="appointment.id">
-            <td>{{ formatDate(appointment.date) }}</td>
-            <td>{{ formatTime(appointment.time) }}</td>
-            <td>{{ appointment.patient.fullName }}</td>
-            <td>{{ appointment.doctor.name }}</td>
+            <td>{{ formatDate(appointment.dateTime) }}</td>
+            <td>{{ formatTime(appointment.dateTime) }}</td>
+            <td>{{ appointment.patientId }}</td>
+            <td>{{ appointment.doctorId }}</td>
             <td>
-              <span :class="['status-badge', appointment.status.toLowerCase()]">
-                {{ formatStatus(appointment.status) }}
+              <span :class="['status-badge', (appointment.status || 'SCHEDULED').toLowerCase()]">
+                {{ formatStatus(appointment.status || 'SCHEDULED') }}
               </span>
-            </td>
-            <td class="actions">
-              <button 
-                v-if="appointment.status === 'SCHEDULED'"
-                @click="cancelAppointment(appointment)"
-                class="btn-cancel"
-                title="Cancelar Consulta"
-              >
-                Cancelar
-              </button>
-              <button 
-                v-if="appointment.status === 'SCHEDULED'"
-                @click="completeAppointment(appointment)"
-                class="btn-complete"
-                title="Marcar como Realizada"
-              >
-                Realizar
-              </button>
-              <button 
-                @click="viewDetails(appointment)"
-                class="btn-view"
-                title="Ver Detalhes"
-              >
-                Detalhes
-              </button>
             </td>
           </tr>
         </tbody>
@@ -221,6 +153,14 @@ export default {
       error.value = null;
 
       try {
+        console.log('Carregando consultas com parâmetros:', {
+          page: currentPage.value - 1,
+          search: searchTerm.value,
+          startDate: filters.value.startDate,
+          endDate: filters.value.endDate,
+          status: filters.value.status
+        });
+
         const response = await appointmentService.getAppointments({
           page: currentPage.value - 1,
           search: searchTerm.value,
@@ -229,11 +169,28 @@ export default {
           status: filters.value.status
         });
 
-        appointments.value = response.content;
-        totalPages.value = response.totalPages;
+        console.log('Resposta da API:', response);
+
+        if (Array.isArray(response)) {
+          appointments.value = response;
+          totalPages.value = 1;
+        } else if (response && Array.isArray(response.content)) {
+          appointments.value = response.content;
+          totalPages.value = response.totalPages || 1;
+        } else {
+          console.error('Resposta inválida da API:', response);
+          error.value = 'Formato de resposta inválido da API';
+          appointments.value = [];
+          totalPages.value = 1;
+          return;
+        }
+
+        console.log('Consultas carregadas:', appointments.value);
       } catch (err) {
+        console.error('Erro ao carregar consultas:', err);
         error.value = 'Erro ao carregar consultas. Por favor, tente novamente.';
-        console.error(err);
+        appointments.value = [];
+        totalPages.value = 1;
       } finally {
         loading.value = false;
       }
@@ -318,12 +275,12 @@ export default {
       loadAppointments();
     };
 
-    const formatDate = (date) => {
-      return new Date(date).toLocaleDateString('pt-BR');
+    const formatDate = (dateTime) => {
+      return new Date(dateTime).toLocaleDateString('pt-BR');
     };
 
-    const formatTime = (time) => {
-      return time;
+    const formatTime = (dateTime) => {
+      return new Date(dateTime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     };
 
     const formatStatus = (status) => {

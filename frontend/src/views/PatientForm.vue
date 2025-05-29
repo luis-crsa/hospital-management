@@ -3,7 +3,6 @@
     <h1>{{ isEditing ? 'Editar Paciente' : 'Novo Paciente' }}</h1>
 
     <form @submit.prevent="handleSubmit">
-      <!-- Dados Obrigatórios -->
       <div class="form-section">
         <h2>Dados Obrigatórios</h2>
         
@@ -85,7 +84,6 @@
         </div>
       </div>
 
-      <!-- Dados Complementares -->
       <div class="form-section">
         <h2>Dados Complementares</h2>
 
@@ -168,19 +166,16 @@ export default {
       errors.value = {};
       let isValid = true;
 
-      // Validação de CPF
       if (!isEditing.value && !validateCPF(form.value.cpf)) {
         errors.value.cpf = 'CPF inválido';
         isValid = false;
       }
 
-      // Validação de email
       if (form.value.email && !validateEmail(form.value.email)) {
         errors.value.email = 'Email inválido';
         isValid = false;
       }
 
-      // Validação de telefone
       if (!validatePhone(form.value.phone)) {
         errors.value.phone = 'Telefone inválido';
         isValid = false;
@@ -193,7 +188,6 @@ export default {
       cpf = cpf.replace(/[^\d]/g, '');
       if (cpf.length !== 11) return false;
 
-      // Implementar validação de dígitos verificadores
       return true;
     };
 

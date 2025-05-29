@@ -1,6 +1,7 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Sobre</h1>
+    <p>Sistema de gerenciamento hospitalar do Cesupa!</p>
   </div>
 </template>
 
@@ -9,6 +10,7 @@
   .about {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
   }
 }

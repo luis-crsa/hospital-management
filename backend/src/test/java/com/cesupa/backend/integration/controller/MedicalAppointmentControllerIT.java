@@ -35,9 +35,6 @@ public class MedicalAppointmentControllerIT {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private MedicalAppointmentRepository repository;
-
-    @Autowired
     private DoctorRepository doctorRepository;
 
     @Autowired
