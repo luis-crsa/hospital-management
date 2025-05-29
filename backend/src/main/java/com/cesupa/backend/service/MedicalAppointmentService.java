@@ -15,6 +15,7 @@ import com.cesupa.backend.service.exceptions.ConflictException;
 import com.cesupa.backend.service.exceptions.ResourceNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -37,20 +38,16 @@ public class MedicalAppointmentService {
     @Transactional
     public MedicalAppointmentDTO schedule(MedicalAppointmentDTO dto){
         MedicalAppointment entity = new MedicalAppointment();
-        copyDtoToEntity(dto, entity);
-        entity = medicalAppointmentRepository.save(entity);
-        return new MedicalAppointmentDTO(entity);
-    }
 
-    private void copyDtoToEntity(MedicalAppointmentDTO dto, MedicalAppointment entity){
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
-            .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado"));
         Patient patient = patientRepository.findById(dto.getPatientId())
-            .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
 
-        if (dto.getDateTime().toLocalTime().isBefore(doctor.getWorkStart()) || 
-            dto.getDateTime().toLocalTime().isAfter(doctor.getWorkEnd())) {
-            throw new IllegalArgumentException("Consulta fora do horário de expediente do médico.");
+        if (dto.getDateTime().toLocalTime().isBefore(doctor.getWorkStart()) ||
+                dto.getDateTime().toLocalTime().equals(doctor.getWorkEnd()) ||
+                dto.getDateTime().toLocalTime().isAfter(doctor.getWorkEnd())) {
+            throw new ConflictException("Consulta fora do horário de expediente do médico.");
         }
 
         if (medicalAppointmentRepository.existsByDoctorIdAndDateTime(doctor.getId(), dto.getDateTime())) {
@@ -62,6 +59,7 @@ public class MedicalAppointmentService {
         entity.setDateTime(dto.getDateTime());
         entity.setReason(dto.getReason());
         entity.setStatus(AppointmentStatus.SCHEDULED);
+        entity = medicalAppointmentRepository.save(entity);
+        return new MedicalAppointmentDTO(entity);
     }
-
 }

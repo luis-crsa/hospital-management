@@ -1,7 +1,6 @@
 package com.cesupa.backend.controller;
 
 import com.cesupa.backend.domain.medicalAppointment.MedicalAppointmentDTO;
-import com.cesupa.backend.domain.patient.PatientDTO;
 import com.cesupa.backend.service.MedicalAppointmentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
