@@ -1,20 +1,25 @@
-package com.cesupa.backend.domain.patient;
-
-import jakarta.persistence.*;
-import lombok.*;
+package com.cesupa.backend.domain.doctor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.cesupa.backend.domain.Gender;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
-@Table(name = "patient")
+@Table(name = "doctor")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Patient {
+public class Doctor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +37,7 @@ public class Patient {
     private String phone;
     private String address;
     private String email;
-
-    @Enumerated(EnumType.STRING)
-    private PatientBloodType bloodType;
-
-    private String knownAllergies;
+    private LocalTime workStart;
+    private LocalTime workEnd;
     private Boolean active;
 }

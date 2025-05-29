@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.cesupa.backend.domain.Gender;
+
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -29,8 +31,7 @@ public class PatientDTO {
     private String cpf;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private PatientGender gender;
+    private Gender gender;
 
     @NotBlank(message = "Campo obrigatório")
     @Pattern(
@@ -46,9 +47,7 @@ public class PatientDTO {
     @Email(message = "Email deve ser válido")
     private String email;
 
-    @Enumerated(EnumType.STRING)
     private PatientBloodType bloodType;
-
     private String knownAllergies;
     private Boolean active;
 

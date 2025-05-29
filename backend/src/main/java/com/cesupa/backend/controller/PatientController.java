@@ -22,7 +22,7 @@ import com.cesupa.backend.service.PatientService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/patients")
+@RequestMapping("/api/patients")
 public class PatientController {
 
     @Autowired
