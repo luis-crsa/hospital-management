@@ -1,10 +1,6 @@
 package com.cesupa.backend.controller;
 
-<<<<<<< HEAD
-public class MedicalAppointmentController {
-=======
 import com.cesupa.backend.domain.medicalAppointment.MedicalAppointmentDTO;
-import com.cesupa.backend.domain.patient.PatientDTO;
 import com.cesupa.backend.service.MedicalAppointmentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +31,4 @@ public class MedicalAppointmentController {
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
->>>>>>> ffd1daa318912a04e78350ae48bde6528a433a0d
 }
