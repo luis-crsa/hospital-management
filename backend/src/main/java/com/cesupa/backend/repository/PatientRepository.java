@@ -13,4 +13,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long>{
     Page<Patient> findByActiveTrue(Pageable pageable);
 
     Optional<Patient> findByIdAndActiveTrue(Long id);
+
+    boolean existsByCpf(String cpf);
 }

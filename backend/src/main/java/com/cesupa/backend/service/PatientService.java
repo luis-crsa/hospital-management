@@ -34,13 +34,13 @@ public class PatientService {
 
     @Transactional
     public PatientDTO insert(PatientDTO dto){
-        try {
-            Patient entity = new Patient();
-            copyDtoToEntity(entity, dto);
-            return new PatientDTO(repository.save(entity));
-        } catch (DataIntegrityViolationException e) {
+        if(repository.existsByCpf(dto.getCpf())){
             throw new ConflictException("CPF já cadastrado");
         }
+
+        Patient entity = new Patient();
+        copyDtoToEntity(entity, dto);
+        return new PatientDTO(repository.save(entity));
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class PatientService {
     }
 
     @Transactional
-    public void delete(Long id){
+    public void deactivate(Long id){
         if(!repository.existsById(id)){
             throw new ResourceNotFoundException("Nenhum usuário encontrado");
         }

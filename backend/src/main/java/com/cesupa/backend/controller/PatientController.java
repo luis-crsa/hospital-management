@@ -55,8 +55,8 @@ public class PatientController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        service.delete(id);
+    public ResponseEntity<Void> deactivate(@PathVariable Long id){
+        service.deactivate(id);
         return ResponseEntity.noContent().build();
     }
 }
